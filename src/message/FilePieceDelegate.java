@@ -3,6 +3,7 @@ package message;
 import peer.peerProcess;
 
 public class FilePieceDelegate {
+    
     int isPresent;
     String fromPeerID;
     byte[] content;
