@@ -94,6 +94,19 @@ public class BitFieldMessage {
         return bitFieldMessage;
     }
 
+    public int getNumberOfPieces() {
+        boolean isFileDownloadComplete = true;
+        for(Piece file : pieceIndex){
+            if(file.getContent() == 0){
+                updateBitFieldInformation = false;
+                isFileDownloaded = false;
+            }else{
+                updateBitFieldInformation = true;
+                isFileDownloaded = true;
+            }
+        }
+    }
+
     public int getNumberOfPiecesPresent() {
         int count = 0;
         for (Piece filePiece : pieces) {
@@ -101,9 +114,10 @@ public class BitFieldMessage {
                 count++;
             }
         }
-
         return count;
     }
+
+    
 
     public boolean isFileDownloadComplete() {
         boolean isFileDownloaded = true;
