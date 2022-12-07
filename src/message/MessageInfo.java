@@ -7,6 +7,8 @@ public class MessageInfo {
     public MessageInfo() {
         message = new Message();
         fromPeerID = null;
+
+        
     }
 
     public Message getMessage() {
