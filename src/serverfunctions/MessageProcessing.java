@@ -1,4 +1,4 @@
-package server;
+package serverfunctions;
 
 import config.CommonConfiguration;
 import msg.*;

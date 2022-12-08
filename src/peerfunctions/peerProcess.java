@@ -4,9 +4,9 @@ import config.CommonConfiguration;
 import logging.Logging;
 import msg.BitField;
 import msg.MessageInfo;
-import server.MessageHandler;
-import server.MessageProcessing;
-import server.ServerHandler;
+import serverfunctions.MessageHandler;
+import serverfunctions.MessageProcessing;
+import serverfunctions.ServerHandler;
 
 import java.io.File;
 import java.io.IOException;

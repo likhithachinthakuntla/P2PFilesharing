@@ -1,4 +1,4 @@
-package server;
+package serverfunctions;
 
 import java.io.IOException;
 import java.io.InputStream;

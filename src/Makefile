@@ -10,7 +10,7 @@ compile:
 	$(JCC) $(JFLAGS) logging/*.java
 	$(JCC) $(JFLAGS) msg/*.java
 	$(JCC) $(JFLAGS) peerfunctions/*.java
-	$(JCC) $(JFLAGS) server/*.java
+	$(JCC) $(JFLAGS) serverfunctions/*.java
 	$(JCC) $(JFLAGS) $(REMOTE_PEER_OPTS) StartRemotePeers.java
 
 start-remote-peers: StartRemotePeers.class
@@ -22,5 +22,5 @@ clean:
 	$(RM) logging/*.class
 	$(RM) msg/*.class
 	$(RM) peerfunctions/*.class
-	$(RM) server/*.class
+	$(RM) serverfunctions/*.class
 	$(RM) *.log*
