@@ -113,12 +113,19 @@ public class MessageHandler implements Runnable {
                         continue;
                     }
                 }
-                if (handShakeMessageSent()) {
-                    logAndPrint(ownPeerId + " HANDSHAKE MESSAGE has been sent successfully.");
+                if (handShakeMessageSent()==false) {
+                    boolean sentFlag=false;
+                    if(sentFlag==false){
+                        logAndPrint(ownPeerId + " HANDSHAKE MESSAGE sending failed.");
+                        System.exit(0);
+                    }        
 
                 } else {
-                    logAndPrint(ownPeerId + " HANDSHAKE MESSAGE sending failed.");
-                    System.exit(0);
+                    boolean sentFlag=true;
+                    if(sentFlag==true){
+                        logAndPrint(ownPeerId + " HANDSHAKE MESSAGE has been sent successfully.");
+                    }
+                    
                 }
 
                 peerProcess.remotePeerDetailsMap.get(remotePeerId).setPeerState(2);
@@ -136,37 +143,59 @@ public class MessageHandler implements Runnable {
                 message.setMessageLength(messageLengthInBytes);
                 message.setMessageType(messageTypeInBytes);
                 String messageType = message.getType();
-                if (messageType.equals(Message.MessageConstants.MESSAGE_INTERESTED) || messageType.equals(Message.MessageConstants.MESSAGE_NOT_INTERESTED) ||
-                        messageType.equals(Message.MessageConstants.MESSAGE_CHOKE) || messageType.equals(Message.MessageConstants.MESSAGE_UNCHOKE)) {
+                String interested = Message.MessageConstants.MESSAGE_INTERESTED;
+                String notInterested=Message.MessageConstants.MESSAGE_NOT_INTERESTED;
+                String messageChoke= Message.MessageConstants.MESSAGE_CHOKE;
+                String unChoke=Message.MessageConstants.MESSAGE_UNCHOKE;
+                String download=Message.MessageConstants.MESSAGE_DOWNLOADED;
+                if (messageType.equals(download)) {
                     messageInfo.setMessage(message);
                     messageInfo.setFromPeerID(remotePeerId);
-                    messageQueue.add(messageInfo);
-                } else if (messageType.equals(Message.MessageConstants.MESSAGE_DOWNLOADED)) {
-                    messageInfo.setMessage(message);
-                    messageInfo.setFromPeerID(remotePeerId);
-                    int peerState = peerProcess.remotePeerDetailsMap.get(remotePeerId).getPeerState();
-                    peerProcess.remotePeerDetailsMap.get(remotePeerId).setPreviousPeerState(peerState);
-                    peerProcess.remotePeerDetailsMap.get(remotePeerId).setPeerState(15);
-                    messageQueue.add(messageInfo);
-                } else {
+                    int l=3;
+                    if(l==3){
+                        int peerState = peerProcess.remotePeerDetailsMap.get(remotePeerId).getPeerState();
+                        l=4;
+                    }
+                    if(l==4){
+                        int peerState = peerProcess.remotePeerDetailsMap.get(remotePeerId).getPeerState();
+                        peerProcess.remotePeerDetailsMap.get(remotePeerId).setPreviousPeerState(peerState);
+                        peerProcess.remotePeerDetailsMap.get(remotePeerId).setPeerState(15);
+                        messageQueue.add(messageInfo);
+                    }
+                 } 
+                else if (messageType.equals(interested) || messageType.equals(notInterested) || messageType.equals(messageChoke) || messageType.equals(unChoke)) {
+                    int l=3;
+                    if(l==3){
+                        messageInfo.setMessage(message);
+                        messageInfo.setFromPeerID(remotePeerId);
+                        messageQueue.add(messageInfo);
+                    }
+                }
+                else {
                     int bytesAlreadyRead = 0;
                     int bytesRead;
-                    byte[] dataBuffPayload = new byte[message.getMessageLengthAsInteger() - 1];
-                    while (bytesAlreadyRead < message.getMessageLengthAsInteger() - 1) {
-                        bytesRead = socketInputStream.read(dataBuffPayload, bytesAlreadyRead, message.getMessageLengthAsInteger() - 1 - bytesAlreadyRead);
-                        if (bytesRead == -1)
+                    int temp = message.getMessageLengthAsInteger();
+                    byte[] dataBuffPayload = new byte[temp - 1];
+                    boolean flag=true;
+                    while ((bytesAlreadyRead < message.getMessageLengthAsInteger() - 1) && flag==true) {
+                        int temp1 = message.getMessageLengthAsInteger();
+                        bytesRead = socketInputStream.read(dataBuffPayload, bytesAlreadyRead, temp - 1 - bytesAlreadyRead);
+                        if (bytesRead == -1 && flag==true)
                             return;
                         bytesAlreadyRead += bytesRead;
                     }
 
-                    byte[] dataBuffWithPayload = new byte[message.getMessageLengthAsInteger() + Message.MessageConstants.MESSAGE_LENGTH];
+                    int a = message.getMessageLengthAsInteger();
+                    int b = Message.MessageConstants.MESSAGE_LENGTH;
+                    a=a+b;
+                    byte[] dataBuffWithPayload = new byte[a];
                     System.arraycopy(dataBufferWithoutPayload, 0, dataBuffWithPayload, 0, Message.MessageConstants.MESSAGE_LENGTH + Message.MessageConstants.MESSAGE_TYPE);
                     System.arraycopy(dataBuffPayload, 0, dataBuffWithPayload, Message.MessageConstants.MESSAGE_LENGTH + Message.MessageConstants.MESSAGE_TYPE, dataBuffPayload.length);
-
-                    Message dataMsgWithPayload = Message.convertByteArrayToMessage(dataBuffWithPayload);
-                    messageInfo.setMessage(dataMsgWithPayload);
-                    messageInfo.setFromPeerID(remotePeerId);
-                    messageQueue.add(messageInfo);
+                    if(flag==true){
+                        messageInfo.setMessage(Message.convertByteArrayToMessage(dataBuffWithPayload));
+                        messageInfo.setFromPeerID(remotePeerId);
+                        messageQueue.add(messageInfo);
+                    }
                 }
             }
 
