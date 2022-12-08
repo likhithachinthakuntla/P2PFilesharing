@@ -1,6 +1,6 @@
 package server;
 
-import peer.peerProcess;
+import peerfunctions.peerProcess;
 
 import java.io.IOException;
 import java.net.ServerSocket;

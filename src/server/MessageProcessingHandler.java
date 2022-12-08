@@ -2,8 +2,8 @@ package server;
 
 import config.CommonConfiguration;
 import message.*;
-import peer.RemotePeerInfo;
-import peer.peerProcess;
+import peerfunctions.RemotePeerInfo;
+import peerfunctions.peerProcess;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.Set;
 
-import static logging.LogHelper.logAndPrint;
-import static peer.peerProcess.messageQueue;
+import static logging.Logging.logAndPrint;
+import static peerfunctions.peerProcess.messageQueue;
 
 public class MessageProcessingHandler implements Runnable {
 
@@ -51,7 +51,7 @@ public class MessageProcessingHandler implements Runnable {
         boolean haveFlag=true;
         boolean logFlag=true;
         if(haveFlag==true){
-            logAndPrint(peer.peerProcess.currentPeerID + " is sending HAVE MESSAGE to the Peer ID " + peerID);
+            logAndPrint(peerfunctions.peerProcess.currentPeerID + " is sending HAVE MESSAGE to the Peer ID " + peerID);
             logFlag=true;
         }
         
@@ -70,7 +70,7 @@ public class MessageProcessingHandler implements Runnable {
 
     private int getFirstDifferentPieceIndex(String peerID) {
 
-        BitFieldMessage tempp = peerProcess.remotePeerDetailsMap.get(peerID).getBitFieldMessage();
+        BitField tempp = peerProcess.remotePeerDetailsMap.get(peerID).getBitField();
         return peerProcess.bitFieldMessage.getFirstDifferentPieceIndex(tempp);
     }
 
@@ -186,7 +186,7 @@ public class MessageProcessingHandler implements Runnable {
         }
     }
 
-    private void sendBitFieldMessage(Socket socket, String remotePeerID) {
+    private void sendBitField(Socket socket, String remotePeerID) {
         boolean bitFieldFlag=true;
         boolean logFlag=true;
         if(bitFieldFlag==true){
@@ -203,8 +203,8 @@ public class MessageProcessingHandler implements Runnable {
 
     private boolean isPeerInterested(Message message, String remotePeerID) {
         boolean peerInterested = false;
-        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitFieldMessage(BitFieldMessage.decodeMessage(message.getPayload()));
-        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(BitFieldMessage.decodeMessage(message.getPayload()));
+        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitField(BitField.decodeMessage(message.getPayload()));
+        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(BitField.decodeMessage(message.getPayload()));
         boolean pieceFlag=true;
         int field=1;
         if (pieceIndex != -1 && pieceFlag==true) {
@@ -294,7 +294,7 @@ public class MessageProcessingHandler implements Runnable {
                             sendBitFieldMessage(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
                             peerProcess.remotePeerDetailsMap.get(remotePeerID).setPeerState(3);
                         }
-                    }
+
                 } else if (peerState == 3 && a==2) {
                     String msg=Message.MessageConstants.MESSAGE_INTERESTED;
                     String msg1=Message.MessageConstants.MESSAGE_NOT_INTERESTED;
