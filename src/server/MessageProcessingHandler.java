@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.Set;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 import static peer.peerProcess.messageQueue;
 
 public class MessageProcessingHandler implements Runnable {
