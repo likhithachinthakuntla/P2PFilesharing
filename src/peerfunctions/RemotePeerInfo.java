@@ -30,6 +30,8 @@ public class RemotePeerInfo {
     private Date startTime;
     private Date endTime;
     private double dataRate;
+    private Date endtime;
+    private double datarate;
 
     public RemotePeerInfo(String id, String hostAddress, String port, int hasFile, int index) {
         this.id = id;
@@ -130,6 +132,13 @@ public class RemotePeerInfo {
         return endTime;
     }
 
+    public Date getendtime() {
+        return endtime;
+    }
+
+    public void setendtime(Date endtime) {
+        this.endtime = endtime;
+    }
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;

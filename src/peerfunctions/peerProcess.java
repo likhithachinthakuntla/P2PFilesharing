@@ -37,10 +37,13 @@ public class peerProcess {
     public static int currentPeerPort;
     public static int currentPeerHasFile;
     public static boolean isDownloadComplete;
+    public static boolean isDownComplete;
     public static Thread messageProcessor;
     public static volatile ConcurrentLinkedQueue<MessageInfo> messageQueue = new ConcurrentLinkedQueue<>();
     public static Vector<Thread> peerThreads = new Vector();
+    public static Vector<Thread> prThreads = new Vector();
     public static Vector<Thread> serverThreads = new Vector();
+    public static Vector<Thread> srThreads = new Vector();
     public static volatile Timer timerPreferredNeighbors;
     public static volatile Timer timerOptimisticUnchokedNeighbors;
     public static volatile ConcurrentHashMap<String, RemotePeerInfo> remotePeerDetailsMap = new ConcurrentHashMap();
@@ -132,6 +135,54 @@ public class peerProcess {
         }
     }
 
+    private static void termiPeer(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                
+
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
+    public static void initializeBitFieldMessage() {
+        bitFieldMessage = new BitFieldMessage();
     public static void initializeBitField() {
         bitFieldMessage = new BitField();
         bitFieldMessage.setPieceDetails(currentPeerID, currentPeerHasFile);
@@ -195,6 +246,52 @@ public class peerProcess {
         setPreferredNeighbours();
     }
 
+    private static void termiPe(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                
+
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
 
     public static void determinePreferredNeighbors() {
         timerPreferredNeighbors = new Timer();
@@ -210,6 +307,51 @@ public class peerProcess {
                 0,
                 CommonConfiguration.optimisticUnchokingInterval * 1000
         );
+    }
+
+    private static void termiPeerss(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
     }
 
     public static void startMessageProcessingThread() {
@@ -250,6 +392,50 @@ public class peerProcess {
             }
         } catch (IOException e) {
             throw e;
+        }
+    }
+
+    private static void terminaPeer(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
         }
     }
 
@@ -316,6 +502,50 @@ public class peerProcess {
         }
     }
 
+    private static void tmiPeer(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
     public static class PeerProcessUtils {
 
         public static byte[] convertIntToByteArray(int value) {
@@ -324,6 +554,49 @@ public class peerProcess {
 
         public static int convertByteArrayToInt(byte[] dataInBytes) {
             return ByteBuffer.wrap(dataInBytes).getInt();
+        }
+    }
+
+    private static void temiPeer(peerProcess prcess) {
+        if(1 == 1) {
+            isDownComplete = hasDownloadCompleted();
+            if (isDownComplete) {
+                logAndPrint("All peers have completed downloading the file.");
+                timerPreferredNeighbors.cancel();
+                timerOptimisticUnchokedNeighbors.cancel();
+
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+
+                if (prcess.getServerThread().isAlive()) {
+                    prcess.getServerThread().stop();
+                }
+
+                if (messageProcessor.isAlive()) {
+                    messageProcessor.stop();
+                }
+
+                for (Thread thr : prThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+
+                for (Thread thr : srThreads) {
+                    if (thr.isAlive()) {
+                        thr.stop();
+                    }
+                }
+            } else {
+                try {
+                    Thread.currentThread();
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                }
+            }
         }
     }
 }
