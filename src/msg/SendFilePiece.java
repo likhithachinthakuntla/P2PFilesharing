@@ -1,8 +1,8 @@
-package message;
+package  msg;
 
-import peer.peerProcess;
+import peerfunctions.peerProcess;
 
-public class FilePieceDelegate {
+public class SendFilePiece {
     
     int isPresent;
     int isAdded;
@@ -10,7 +10,7 @@ public class FilePieceDelegate {
     byte[] content;
     int pieceIndex;
 
-    public FilePieceDelegate() {
+    public SendFilePiece() {
     }
 
     public static Piece convertByteArrayToFilePiece(byte[] payloadInBytes) {

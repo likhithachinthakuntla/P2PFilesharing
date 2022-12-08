@@ -1,7 +1,7 @@
-package peer;
+package peerfunctions;
 
-import message.Message;
-
+import msg.Message;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -10,12 +10,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 
 /**
  * This class is used to determine optimistically unchoked neighbor from a list of choked neighbors
  */
-public class OptimisticallyUnchokedNeighbors extends TimerTask {
+public class OptimisticUnchokedNeighbors extends TimerTask {
 
     @Override
     public void run() {
@@ -53,8 +53,37 @@ public class OptimisticallyUnchokedNeighbors extends TimerTask {
             }
         }
     }
+    private void receiveHaveMessage(Socket s, int peerID)
+    {
+        int receivedPeerID=peerID;
+        if(receivedPeerID==peerID)
+        {
+            logAndPrint("receiving HAVE message of Peer " + peerID);
+        }
+        else
+            receivedPeerID= peerID+1;
 
+    }
 
+     private void receiveMessageFromSocket(Socket s,byte[] messageInBytes)
+    {
+        try{
+            InputStream in =s.getInputStream();
+            in.read(messageInBytes);
+        }catch(IOException e)
+        {
+
+        }
+    }
+    private void receiveUnchokedMessage(Socket s, int remotePeerID)
+    {
+        int unchokedPeerID= remotePeerID;
+        if(unchokedPeerID==remotePeerID)
+        logAndPrint("unchoked peer id "+ unchokedPeerID);
+        else
+            unchokedPeerID= remotePeerID+1;
+        logAndPrint("remote peer id "+ remotePeerID);
+    }
     private void sendUnChokedMessage(Socket socket, String remotePeerID) {
         logAndPrint("sending a UNCHOKE message to Peer " + remotePeerID);
         Message message = new Message(Message.MessageConstants.MESSAGE_UNCHOKE);

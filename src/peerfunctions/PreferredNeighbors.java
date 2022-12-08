@@ -1,7 +1,7 @@
-package peer;
+package peerfunctions;
 
 import config.CommonConfiguration;
-import message.Message;
+import msg.Message;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 
 public class PreferredNeighbors extends TimerTask {
 

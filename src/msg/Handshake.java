@@ -1,10 +1,10 @@
-package message;
+package msg;
 
-import logging.LogHelper;
+import logging.Logging;
 
 import java.io.UnsupportedEncodingException;
 
-public class HandshakeMessage {
+public class Handshake {
 
     private byte[] headerInBytes = new byte[Message.MessageConstants.HANDSHAKE_HEADER_LENGTH];
     private byte[] peerIDInBytes = new byte[Message.MessageConstants.HANDSHAKE_PEERID_LENGTH];
@@ -17,10 +17,10 @@ public class HandshakeMessage {
     private String head;
     private String peer;
 
-    public HandshakeMessage() {
+    public Handshake() {
     }
 
-    public HandshakeMessage(String header, String peerID) {
+    public Handshake(String header, String peerID) {
         try {
             this.header = header;
             this.headerInBytes = header.getBytes(Message.MessageConstants.DEFAULT_CHARSET);
@@ -32,7 +32,7 @@ public class HandshakeMessage {
                 throw new Exception("Handshake PeerID is too large");
             this.zeroBits = "0000000000".getBytes(Message.MessageConstants.DEFAULT_CHARSET);
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
     }
 
@@ -56,13 +56,13 @@ public class HandshakeMessage {
             return true;
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return true;
     }
 
-    public static byte[] convertHandshakeMessageToBytes(HandshakeMessage handshakeMessage) {
+    public static byte[] convertHandshakeToBytes(Handshake handshakeMessage) {
         byte[] handshakeMessageInBytes = new byte[Message.MessageConstants.HANDSHAKE_MESSAGE_LENGTH];
         try {
             int pk = 1;
@@ -89,21 +89,21 @@ public class HandshakeMessage {
             }
                 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return handshakeMessageInBytes;
     }
 
-    public static HandshakeMessage convertBytesToHandshakeMessage(byte[] handShakeMessage) {
-        HandshakeMessage message = null;
+    public static Handshake convertBytesToHandshake(byte[] handShakeMessage) {
+        Handshake message = null;
 
         try {
             if (handShakeMessage.length != Message.MessageConstants.HANDSHAKE_MESSAGE_LENGTH){
                 throw new Exception("While Decoding Handshake message length is invalid");
             }
                 
-            message = new HandshakeMessage();
+            message = new Handshake();
             byte[] messageHeader = new byte[Message.MessageConstants.HANDSHAKE_HEADER_LENGTH];
             byte[] messagePeerID = new byte[Message.MessageConstants.HANDSHAKE_PEERID_LENGTH];
 
@@ -114,13 +114,13 @@ public class HandshakeMessage {
             message.setPeerIDFromBytes(messagePeerID);
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
         return message;
     }
 
     public boolean convertBytestohandshake(byte[] handShakeMessage){
-        HandshakeMessage message = null;
+        Handshake message = null;
 
         try {
             if (handShakeMessage.length != 2){
@@ -134,7 +134,7 @@ public class HandshakeMessage {
             byte[] messHead = new byte[Message.MessageConstants.HANDSHAKE_MESSAGE_LENGTH];
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
         return true;
     }
@@ -178,6 +178,6 @@ public class HandshakeMessage {
     }
 
     private static void logAndShowInConsole(String message) {
-        LogHelper.logAndPrint(message);
+        Logging.logAndPrint(message);
     }
 }

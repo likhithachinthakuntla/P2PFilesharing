@@ -1,7 +1,7 @@
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import peer.RemotePeerInfo;
+import peerfunctions.RemotePeerInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -58,7 +58,7 @@ public class StartRemotePeers {
 
                 channel = (ChannelExec) session.openChannel("exec");
 
-                channel.setCommand("cd " + path + "; java peer.peerProcess " + pInfo.getId());
+                channel.setCommand("cd " + path + "; java peerfunctions.peerProcess " + pInfo.getId());
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 channel.setOutputStream(responseStream);
                 channel.connect();

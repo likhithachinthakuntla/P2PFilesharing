@@ -1,7 +1,7 @@
-package message;
+package msg;
 
-import logging.LogHelper;
-import peer.peerProcess;
+import logging.Logging;
+import peerfunctions.peerProcess;
 
 import java.io.UnsupportedEncodingException;
 
@@ -85,7 +85,7 @@ public class Message {
     }
 
     private static void logAndPrint(String message) {
-        LogHelper.logAndPrint(message);
+        Logging.logAndPrint(message);
     }
 
     public static Message convertByteArrayToMessage(byte[] message) {
@@ -117,7 +117,7 @@ public class Message {
                 msg.setPayload(payLoad);
             }
         } catch (Exception e) {
-            LogHelper.logAndPrint(e.toString());
+            Logging.logAndPrint(e.toString());
             msg = null;
         }
         return msg;
@@ -170,7 +170,7 @@ public class Message {
                 System.arraycopy(message.getTypeInBytes(), 0, messageInByteArray, MessageConstants.MESSAGE_LENGTH, MessageConstants.MESSAGE_TYPE);
             }
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return messageInByteArray;

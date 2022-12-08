@@ -1,12 +1,12 @@
-package peer;
+package peerfunctions;
 
 import config.CommonConfiguration;
-import logging.LogHelper;
-import message.BitFieldMessage;
-import message.MessageInfo;
-import server.MessageHandler;
-import server.MessageProcessingHandler;
-import server.ServerHandler;
+import logging.Logging;
+import msg.BitField;
+import msg.MessageInfo;
+import serverfunctions.MessageHandler;
+import serverfunctions.MessageProcessing;
+import serverfunctions.ServerHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 
 
 @SuppressWarnings({"deprecation", "unchecked"})
@@ -33,7 +33,7 @@ public class peerProcess {
     public static boolean isFirstPeer;
     public static String currentPeerID;
     public static int peerIndex;
-    public static BitFieldMessage bitFieldMessage;
+    public static BitField bitFieldMessage;
     public static int currentPeerPort;
     public static int currentPeerHasFile;
     public static boolean isDownloadComplete;
@@ -63,13 +63,13 @@ public class peerProcess {
         currentPeerID = args[0];
 
         try {
-            LogHelper logHelper = new LogHelper();
+            Logging logHelper = new Logging();
             logHelper.initializeLogger(currentPeerID);
             logAndPrint("Started listening...");
 
             initializeConfiguration();
             setCurrentPeerDetails();
-            initializeBitFieldMessage();
+            initializeBitField();
 
             startMessageProcessingThread();
             startFileServerReceiverThreads(process);
@@ -183,6 +183,8 @@ public class peerProcess {
 
     public static void initializeBitFieldMessage() {
         bitFieldMessage = new BitFieldMessage();
+    public static void initializeBitField() {
+        bitFieldMessage = new BitField();
         bitFieldMessage.setPieceDetails(currentPeerID, currentPeerHasFile);
     }
 
@@ -301,7 +303,7 @@ public class peerProcess {
 
     public static void determineOptimisticallyUnchockedNeighbours() {
         timerOptimisticUnchokedNeighbors = new Timer();
-        timerOptimisticUnchokedNeighbors.schedule(new OptimisticallyUnchokedNeighbors(),
+        timerOptimisticUnchokedNeighbors.schedule(new OptimisticUnchokedNeighbors(),
                 0,
                 CommonConfiguration.optimisticUnchokingInterval * 1000
         );
@@ -353,7 +355,7 @@ public class peerProcess {
     }
 
     public static void startMessageProcessingThread() {
-        messageProcessor = new Thread(new MessageProcessingHandler(currentPeerID));
+        messageProcessor = new Thread(new MessageProcessing(currentPeerID));
         messageProcessor.start();
     }
 

@@ -1,4 +1,4 @@
-package message;
+package msg;
 
 import config.CommonConfiguration;
 
@@ -6,7 +6,7 @@ import config.CommonConfiguration;
  * This class is used to handle file piece information
  */
 public class Piece {
-    private final FilePieceDelegate filePieceDelegate = new FilePieceDelegate();
+    private final SendFilePiece filePieceDelegate = new SendFilePiece();
 
     public Piece() {
         filePieceDelegate.setContent(new byte[CommonConfiguration.pieceSize]);

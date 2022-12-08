@@ -1,4 +1,4 @@
-package message;
+package msg;
 
 public class MessageInfo {
     private Message message;
