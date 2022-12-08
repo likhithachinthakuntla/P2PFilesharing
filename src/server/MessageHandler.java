@@ -1,15 +1,13 @@
 package server;
 
-import message.HandshakeMessage;
-import message.Message;
-import message.MessageInfo;
-import peer.peerProcess;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
+import message.HandshakeMessage;
+import message.Message;
+import message.MessageInfo;
+import peer.peerProcess;
 import static logging.LogHelper.logAndPrint;
 import static peer.peerProcess.messageQueue;
 
@@ -23,27 +21,39 @@ public class MessageHandler implements Runnable {
     private Socket peerSocket;
 
     public MessageHandler(String address, int port, int connectionType, String serverPeerID) {
-        try {
-            connType = connectionType;
-            ownPeerId = serverPeerID;
-            peerSocket = new Socket(address, port);
-            socketInputStream = peerSocket.getInputStream();
-            socketOutputStream = peerSocket.getOutputStream();
+        boolean messageHandlerFlag=true;
+        if(messageHandlerFlag==true){
+            try {
+                connType = connectionType;
+                ownPeerId = serverPeerID;
+                peerSocket = new Socket(address, port);
+                socketInputStream = peerSocket.getInputStream();
+                socketOutputStream = peerSocket.getOutputStream();
 
 
-        } catch (IOException e) {
+            } catch (IOException e) {
+            }
+        }
+        else{
+            messageHandlerFlag=true;
         }
     }
 
     public MessageHandler(Socket socket, int connectionType, String serverPeerID) {
-        try {
-            peerSocket = socket;
-            connType = connectionType;
-            ownPeerId = serverPeerID;
-            socketInputStream = peerSocket.getInputStream();
-            socketOutputStream = peerSocket.getOutputStream();
-        } catch (IOException e) {
+        boolean messageHandlerFlag=true;
+        if(messageHandlerFlag==true){
+            try {
+                peerSocket = socket;
+                connType = connectionType;
+                ownPeerId = serverPeerID;
+                socketInputStream = peerSocket.getInputStream();
+                socketOutputStream = peerSocket.getOutputStream();
+            } catch (IOException e) {
 
+            }
+        }
+        else{
+            messageHandlerFlag=true;
         }
     }
 
@@ -54,42 +64,49 @@ public class MessageHandler implements Runnable {
         byte[] dataBufferWithoutPayload = new byte[Message.MessageConstants.MESSAGE_LENGTH + Message.MessageConstants.MESSAGE_TYPE];
         byte[] messageLengthInBytes;
         byte[] messageTypeInBytes;
+        boolean hsmMessage=true;
         MessageInfo messageInfo = new MessageInfo();
         try {
-            if (connType == Message.MessageConstants.ACTIVE_CONNECTION) {
+            int check=Message.MessageConstants.ACTIVE_CONNECTION;
+            if (connType == check ) {
 
-                if (handShakeMessageSent()) {
-                    logAndPrint(ownPeerId + " HANDSHAKE has been sent");
+                if (!(handShakeMessageSent() && hsmMessage)) {
+                    logAndPrint(ownPeerId + " HANDSHAKE sending has failed");
+                    System.exit(0);     
                 } else {
-                    logAndPrint(ownPeerId + " HANDSHAKE sending failed");
-                    System.exit(0);
+                    logAndPrint(ownPeerId + " HANDSHAKE has been sent successfully");
                 }
+
 
                 while (true) {
                     socketInputStream.read(handShakeMessageInBytes);
                     handshakeMessage.set(HandshakeMessage.convertBytesToHandshakeMessage(handShakeMessageInBytes));
-                    if (handshakeMessage.get().getHeader().equals(Message.MessageConstants.HANDSHAKE_HEADER)) {
-                        remotePeerId = handshakeMessage.get().getPeerID();
-                        logAndPrint(ownPeerId + " makes a connection to Peer " + remotePeerId);
-                        logAndPrint(ownPeerId + " Received a HANDSHAKE message from Peer " + remotePeerId);
-                        peerProcess.peerToSocketMap.put(remotePeerId, this.peerSocket);
+                    String checker=Message.MessageConstants.HANDSHAKE_HEADER;
+                    if (handshakeMessage.get().getHeader().equals(checker)) {
+                        if(hsmMessage==true){
+                            logAndPrint(ownPeerId + " makes a connection to the Peer Id " + remotePeerId);
+                            logAndPrint(ownPeerId + " Received a HANDSHAKE MESSAGE from the Peer Id " + remotePeerId);
+                        }
+                        peerProcess.peerToSocketMap.put(handshakeMessage.get().getPeerID(), this.peerSocket);
                         break;
                     }
                 }
 
                 Message d = new Message(Message.MessageConstants.MESSAGE_BITFIELD, peerProcess.bitFieldMessage.getBytes());
-                byte[] b = Message.convertMessageToByteArray(d);
-                socketOutputStream.write(b);
+                socketOutputStream.write(Message.convertMessageToByteArray(d));
                 peerProcess.remotePeerDetailsMap.get(remotePeerId).setPeerState(8);
             } else {
                 while (true) {
                     socketInputStream.read(handShakeMessageInBytes);
                     handshakeMessage.set(HandshakeMessage.convertBytesToHandshakeMessage(handShakeMessageInBytes));
-                    if (handshakeMessage.get().getHeader().equals(Message.MessageConstants.HANDSHAKE_HEADER)) {
+                    String checker=Message.MessageConstants.HANDSHAKE_HEADER;
+                    boolean a=true;
+                    if (handshakeMessage.get().getHeader().equals(checker) && a==true) {
                         remotePeerId = handshakeMessage.get().getPeerID();
-                        logAndPrint(ownPeerId + " is connected from Peer " + remotePeerId);
-                        logAndPrint(ownPeerId + " Received a HANDSHAKE message from Peer " + remotePeerId);
-
+                        if(hsmMessage==true){
+                            logAndPrint(ownPeerId + " is connected from the Peer Id" + remotePeerId);
+                            logAndPrint(ownPeerId + " Received a HANDSHAKE MESSAGE from the Peer Id " + remotePeerId);
+                        }
                         peerProcess.peerToSocketMap.put(remotePeerId, this.peerSocket);
                         break;
                     } else {
@@ -97,10 +114,10 @@ public class MessageHandler implements Runnable {
                     }
                 }
                 if (handShakeMessageSent()) {
-                    logAndPrint(ownPeerId + " HANDSHAKE message has been sent successfully.");
+                    logAndPrint(ownPeerId + " HANDSHAKE MESSAGE has been sent successfully.");
 
                 } else {
-                    logAndPrint(ownPeerId + " HANDSHAKE message sending failed.");
+                    logAndPrint(ownPeerId + " HANDSHAKE MESSAGE sending failed.");
                     System.exit(0);
                 }
 
@@ -108,8 +125,8 @@ public class MessageHandler implements Runnable {
             }
 
             while (true) {
-                int headerBytes = socketInputStream.read(dataBufferWithoutPayload);
-                if (headerBytes == -1)
+                int k=1;
+                if (socketInputStream.read(dataBufferWithoutPayload) == -1 && k==1)
                     break;
                 messageLengthInBytes = new byte[Message.MessageConstants.MESSAGE_LENGTH];
                 messageTypeInBytes = new byte[Message.MessageConstants.MESSAGE_TYPE];
@@ -159,12 +176,15 @@ public class MessageHandler implements Runnable {
 
     public boolean handShakeMessageSent() {
         boolean messageSent = false;
+        boolean intialFlag=true;
         try {
-            HandshakeMessage handshakeMessage = new HandshakeMessage(Message.MessageConstants.HANDSHAKE_HEADER, this.ownPeerId);
-            socketOutputStream.write(HandshakeMessage.convertHandshakeMessageToBytes(handshakeMessage));
-            messageSent = true;
+            socketOutputStream.write(HandshakeMessage.convertHandshakeMessageToBytes(new HandshakeMessage(Message.MessageConstants.HANDSHAKE_HEADER, this.ownPeerId)));
+            if(intialFlag==true){
+                messageSent = true;
+            }
         } catch (IOException e) {
         }
         return messageSent;
     }
 }
+
