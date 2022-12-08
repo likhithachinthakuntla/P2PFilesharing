@@ -14,22 +14,33 @@ public class ServerHandler implements Runnable {
     private Thread otherPeerThread;
 
     public ServerHandler(ServerSocket serverSocket, String peerID) {
+        int s=0;
+        if (s==0){
         this.serverSocket = serverSocket;
         this.peerID = peerID;
+        }
     }
 
     @Override
     public void run() {
+        boolean flag=true;
+        int k=1;
+        if (flag==true && k==1){
         while (true) {
             try {
                 otherPeerSocket = serverSocket.accept();
-                otherPeerThread = new Thread(new MessageHandler(otherPeerSocket, 0, peerID));
+                MessageHandler temp = new MessageHandler(otherPeerSocket, 0, peerID);
+                otherPeerThread = new Thread(temp);
                 peerProcess.serverThreads.add(otherPeerThread);
+                int l =2;
+                if (l==2){
                 otherPeerThread.start();
+                }
             } catch (IOException e) {
-
             }
         }
     }
+    }
+
 
 }

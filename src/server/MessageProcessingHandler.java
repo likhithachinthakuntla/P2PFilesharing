@@ -24,134 +24,213 @@ public class MessageProcessingHandler implements Runnable {
     private RandomAccessFile randomAccessFile;
 
     public MessageProcessingHandler(String peerID) {
-        currentPeerID = peerID;
+        boolean fl=false;
+        boolean hp=true;
+        if(fl == false && hp==true){
+            currentPeerID = peerID;
+            hp=false;
+        }
     }
 
     private void sendDownloadCompleteMessage(Socket socket, String peerID) {
-        logAndPrint("sending a DOWNLOAD COMPLETE message to Peer " + peerID);
-        Message message = new Message(Message.MessageConstants.MESSAGE_DOWNLOADED);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean downloadFlag=true;
+        boolean logFlag=true;
+
+        if(downloadFlag==true){
+            logAndPrint("Sending DOWNLOAD COMPLETE MESSAGE to the Peer ID " + peerID);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_DOWNLOADED)));
+        }
+
     }
 
     private void sendHaveMessage(Socket socket, String peerID) {
-        logAndPrint(peer.peerProcess.currentPeerID + " sending HAVE message to Peer " + peerID);
-        byte[] bitFieldInBytes = peerProcess.bitFieldMessage.getBytes();
-        Message message = new Message(Message.MessageConstants.MESSAGE_HAVE, bitFieldInBytes);
-        sendMessageToSocket(socket, Message.convertMessageToByteArray(message));
+        boolean haveFlag=true;
+        boolean logFlag=true;
+        if(haveFlag==true){
+            logAndPrint(peer.peerProcess.currentPeerID + " is sending HAVE MESSAGE to the Peer ID " + peerID);
+            logFlag=true;
+        }
+        
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_HAVE, peerProcess.bitFieldMessage.getBytes())));
+        }
     }
 
     private boolean hasPeerInterested(RemotePeerInfo remotePeerInfo) {
-        return remotePeerInfo.getIsComplete() == 0 &&
-                remotePeerInfo.getIsChoked() == 0 && remotePeerInfo.getIsInterested() == 1;
+        boolean a= remotePeerInfo.getIsComplete() == 0;
+        boolean b= remotePeerInfo.getIsChoked() == 0;
+        boolean c= remotePeerInfo.getIsInterested() == 1;
+        return a && b && c;
     }
 
 
     private int getFirstDifferentPieceIndex(String peerID) {
-        return peerProcess.bitFieldMessage.getFirstDifferentPieceIndex(peerProcess.remotePeerDetailsMap.get(peerID).getBitFieldMessage());
+
+        BitFieldMessage tempp = peerProcess.remotePeerDetailsMap.get(peerID).getBitFieldMessage();
+        return peerProcess.bitFieldMessage.getFirstDifferentPieceIndex(tempp);
     }
 
     private void sendRequestMessage(Socket socket, int pieceIndex, String remotePeerID) {
-        logAndPrint(peerProcess.currentPeerID + " sending REQUEST message to Peer " + remotePeerID + " for piece " + pieceIndex);
-        int pieceIndexLength = Message.MessageConstants.PIECE_INDEX_LENGTH;
-        byte[] pieceInBytes = new byte[pieceIndexLength];
+        boolean sendReqFlag=true;
+        boolean logFlag=true;
 
-        byte[] pieceIndexInBytes = peerProcess.PeerProcessUtils.convertIntToByteArray(pieceIndex);
-        System.arraycopy(pieceIndexInBytes, 0, pieceInBytes, 0, pieceIndexInBytes.length);
-        Message message = new Message(Message.MessageConstants.MESSAGE_REQUEST, pieceIndexInBytes);
-        sendMessageToSocket(socket, Message.convertMessageToByteArray(message));
+        if(sendReqFlag==true){
+            logAndPrint(peerProcess.currentPeerID + " is sending REQUEST MESSAGE to Peer ID " + remotePeerID + " for the piece number  " + pieceIndex);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+            byte[] pieceInBytes = new byte[Message.MessageConstants.PIECE_INDEX_LENGTH];
+            byte[] pieceIndexInBytes = peerProcess.PeerProcessUtils.convertIntToByteArray(pieceIndex);
+            System.arraycopy(pieceIndexInBytes, 0, pieceInBytes, 0, pieceIndexInBytes.length);
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_REQUEST, pieceIndexInBytes)));
+        }
 
     }
 
 
     private void sendFilePiece(Socket socket, Message message, String remotePeerID) {
-        byte[] pieceIndexInBytes = message.getPayload();
-        int pieceIndex = peerProcess.PeerProcessUtils.convertByteArrayToInt(pieceIndexInBytes);
-        int pieceSize = CommonConfiguration.pieceSize;
-        logAndPrint("Sending a PIECE message for the piece " + pieceIndex + " to Peer " + remotePeerID);
+        boolean sendFileFlag=true;
+        boolean logFlag=true;
 
-        byte[] bytesRead = new byte[pieceSize];
+        if(sendFileFlag==true){
+            byte[] pieceIndexInBytes = message.getPayload();
+            int pieceIndex = peerProcess.PeerProcessUtils.convertByteArrayToInt(pieceIndexInBytes);
+            logAndPrint("Sending a PIECE MESSAGE for the piece " + pieceIndex + " to Peer " + remotePeerID);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+        byte[] bytesRead = new byte[CommonConfiguration.pieceSize];
         int numberOfBytesRead;
+        int pieceIndex = peerProcess.PeerProcessUtils.convertByteArrayToInt(message.getPayload());
         File file = new File(currentPeerID, CommonConfiguration.fileName);
+        int pieceSize=CommonConfiguration.pieceSize;
         try {
             randomAccessFile = new RandomAccessFile(file, "r");
             randomAccessFile.seek(pieceIndex * pieceSize);
             numberOfBytesRead = randomAccessFile.read(bytesRead, 0, pieceSize);
 
             byte[] buffer = new byte[numberOfBytesRead + Message.MessageConstants.PIECE_INDEX_LENGTH];
-            System.arraycopy(pieceIndexInBytes, 0, buffer, 0, Message.MessageConstants.PIECE_INDEX_LENGTH);
+            System.arraycopy(message.getPayload(), 0, buffer, 0, Message.MessageConstants.PIECE_INDEX_LENGTH);
             System.arraycopy(bytesRead, 0, buffer, Message.MessageConstants.PIECE_INDEX_LENGTH, numberOfBytesRead);
-
-            Message messageToBeSent = new Message(Message.MessageConstants.MESSAGE_PIECE, buffer);
-            sendMessageToSocket(socket, Message.convertMessageToByteArray(messageToBeSent));
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_PIECE, buffer)));
             randomAccessFile.close();
 
         } catch (IOException e) {
             System.out.println(e);
         }
     }
+    }
 
     private boolean isNotPreferredAndUnchokedNeighbour(String remotePeerId) {
-        return !peerProcess.preferredNeighboursMap.containsKey(remotePeerId) && !peerProcess.optimisticUnchokedNeighbors.containsKey(remotePeerId);
+        String rid=remotePeerId;
+        boolean e=peerProcess.preferredNeighboursMap.containsKey(rid);
+        boolean f=!peerProcess.optimisticUnchokedNeighbors.containsKey(rid);
+        return !e && f;
     }
 
     private void sendChokedMessage(Socket socket, String remotePeerID) {
-        logAndPrint("sending a CHOKE message to Peer " + remotePeerID);
-        Message message = new Message(Message.MessageConstants.MESSAGE_CHOKE);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean chokeFlag=true;
+        boolean logFlag=true;
+        if(chokeFlag==true){
+            logAndPrint("Is sending a CHOKE MESSAGE to Peer Id" + remotePeerID);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_CHOKE)));
+        }
     }
 
     private void sendUnChokedMessage(Socket socket, String remotePeerID) {
-        logAndPrint("sending a UNCHOKE message to Peer " + remotePeerID);
-        Message message = new Message(Message.MessageConstants.MESSAGE_UNCHOKE);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean unchokeFlag=true;
+        boolean logFlag=true;
+        if(unchokeFlag==true){
+            logAndPrint("sending a UNCHOKE MESSAGE to the Peer Id " + remotePeerID);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_UNCHOKE)));
+        }
     }
 
     private void sendNotInterestedMessage(Socket socket, String remotePeerID) {
-        logAndPrint("sending a NOT INTERESTED message to Peer " + remotePeerID);
-        Message message = new Message(Message.MessageConstants.MESSAGE_NOT_INTERESTED);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean notInterestFlag=true;
+        boolean logFlag=true;
+        if(notInterestFlag==true){
+        logAndPrint("sending a NOT INTERESTED MESSAGE to the Peer Id " + remotePeerID);
+        logFlag=true;
+        }
+
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_NOT_INTERESTED)));
+        }
     }
 
     private void sendInterestedMessage(Socket socket, String remotePeerID) {
-        logAndPrint("sending an INTERESTED message to Peer " + remotePeerID);
-        Message message = new Message(Message.MessageConstants.MESSAGE_INTERESTED);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean interestFlag=true;
+        boolean logFlag=true;
+        if(interestFlag==true){
+            logAndPrint("Is sending an INTERESTED MESSAGE to the Peer Id" + remotePeerID);
+            logFlag=true;
+        }
+
+        if(logFlag==true){
+            sendMessageToSocket(socket, Message.convertMessageToByteArray(new Message(Message.MessageConstants.MESSAGE_INTERESTED)));
+        }
     }
 
     private void sendBitFieldMessage(Socket socket, String remotePeerID) {
-        logAndPrint("sending a BITFIELD message to Peer " + remotePeerID);
-        byte[] bitFieldMessageInByteArray = peerProcess.bitFieldMessage.getBytes();
-        Message message = new Message(Message.MessageConstants.MESSAGE_BITFIELD, bitFieldMessageInByteArray);
-        byte[] messageInBytes = Message.convertMessageToByteArray(message);
-        sendMessageToSocket(socket, messageInBytes);
+        boolean bitFieldFlag=true;
+        boolean logFlag=true;
+        if(bitFieldFlag==true){
+            logAndPrint("Is sending a BITFIELD message to the Peer Id " + remotePeerID);
+            logFlag=true;
+        }
+        
+        if(logFlag==true){
+        Message message = new Message(Message.MessageConstants.MESSAGE_BITFIELD, peerProcess.bitFieldMessage.getBytes());
+        sendMessageToSocket(socket, Message.convertMessageToByteArray(message));
+        }
 
     }
 
     private boolean isPeerInterested(Message message, String remotePeerID) {
         boolean peerInterested = false;
-        BitFieldMessage bitField = BitFieldMessage.decodeMessage(message.getPayload());
-        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitFieldMessage(bitField);
-        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(bitField);
-        if (pieceIndex != -1) {
+        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitFieldMessage(BitFieldMessage.decodeMessage(message.getPayload()));
+        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(BitFieldMessage.decodeMessage(message.getPayload()));
+        boolean pieceFlag=true;
+        int field=1;
+        if (pieceIndex != -1 && pieceFlag==true) {
             if (message.getType().equals(Message.MessageConstants.MESSAGE_HAVE))
-                logAndPrint("received HAVE message from Peer " + remotePeerID + " for piece " + pieceIndex);
-            peerInterested = true;
+                logAndPrint("did received HAVE MESSAGE from the Peer Id" + remotePeerID + " for piece number " + pieceIndex);
+            if(field==1){
+                peerInterested = true;
+            }
         }
 
         return peerInterested;
     }
 
     private void sendMessageToSocket(Socket socket, byte[] messageInBytes) {
+        boolean sendFlag=true;
+        if(sendFlag==true){
         try {
             OutputStream out = socket.getOutputStream();
-            out.write(messageInBytes);
+            byte[] message=messageInBytes;
+            out.write(message);
         } catch (IOException e) {
         }
+    }
+    else{
+        sendFlag=true;
+    }
     }
 
     @Override
