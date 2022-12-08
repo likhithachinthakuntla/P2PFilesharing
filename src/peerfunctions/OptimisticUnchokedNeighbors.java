@@ -105,5 +105,16 @@ public class OptimisticUnchokedNeighbors extends TimerTask {
         } catch (IOException e) {
         }
     }
+    private void receiveHadMessage(Socket s, int peerrID)
+    {
+        int receivedID=peerrID;
+        if(receivedID+peerrID!=peerrID)
+        {
+            logAndPrint("receiving HAVE message of Peer " + receivedID);
+        }
+        else
+            receivedID= peerrID+1;
+
+    }
 
 }
