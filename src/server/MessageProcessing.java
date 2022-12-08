@@ -16,14 +16,14 @@ import java.util.Set;
 import static logging.Logging.logAndPrint;
 import static peerfunctions.peerProcess.messageQueue;
 
-public class MessageProcessingHandler implements Runnable {
+public class MessageProcessing implements Runnable {
 
 
     private static String currentPeerID;
 
     private RandomAccessFile randomAccessFile;
 
-    public MessageProcessingHandler(String peerID) {
+    public MessageProcessing(String peerID) {
         boolean fl=false;
         boolean hp=true;
         if(fl == false && hp==true){

@@ -5,7 +5,7 @@ import logging.Logging;
 import message.BitField;
 import message.MessageInfo;
 import server.MessageHandler;
-import server.MessageProcessingHandler;
+import server.MessageProcessing;
 import server.ServerHandler;
 
 import java.io.File;
@@ -213,7 +213,7 @@ public class peerProcess {
     }
 
     public static void startMessageProcessingThread() {
-        messageProcessor = new Thread(new MessageProcessingHandler(currentPeerID));
+        messageProcessor = new Thread(new MessageProcessing(currentPeerID));
         messageProcessor.start();
     }
 
