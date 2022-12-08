@@ -32,7 +32,7 @@ public class HandshakeMessage {
                 throw new Exception("Handshake PeerID is too large");
             this.zeroBits = "0000000000".getBytes(Message.MessageConstants.DEFAULT_CHARSET);
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
     }
 
@@ -56,7 +56,7 @@ public class HandshakeMessage {
             return true;
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return true;
@@ -89,7 +89,7 @@ public class HandshakeMessage {
             }
                 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return handshakeMessageInBytes;
@@ -114,7 +114,7 @@ public class HandshakeMessage {
             message.setPeerIDFromBytes(messagePeerID);
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
         return message;
     }
@@ -134,7 +134,7 @@ public class HandshakeMessage {
             byte[] messHead = new byte[Message.MessageConstants.HANDSHAKE_MESSAGE_LENGTH];
 
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
         return true;
     }

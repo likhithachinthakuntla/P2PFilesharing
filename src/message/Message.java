@@ -170,7 +170,7 @@ public class Message {
                 System.arraycopy(message.getTypeInBytes(), 0, messageInByteArray, MessageConstants.MESSAGE_LENGTH, MessageConstants.MESSAGE_TYPE);
             }
         } catch (Exception err) {
-            LogHelper.logAndPrint(err.toString());
+            Logging.logAndPrint(err.toString());
         }
 
         return messageInByteArray;

@@ -7,7 +7,7 @@ import java.net.Socket;
 import message.HandshakeMessage;
 import message.Message;
 import message.MessageInfo;
-import peer.peerProcess;
+import peerfunctions.peerProcess;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import static logging.Logging.logAndPrint;
-import static peer.peerProcess.messageQueue;
+import static peerfunctions.peerProcess.messageQueue;
 
 public class MessageHandler implements Runnable {
     private final ThreadLocal<HandshakeMessage> handshakeMessage = new ThreadLocal<>();

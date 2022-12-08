@@ -2,8 +2,8 @@ package server;
 
 import config.CommonConfiguration;
 import message.*;
-import peer.RemotePeerInfo;
-import peer.peerProcess;
+import peerfunctions.RemotePeerInfo;
+import peerfunctions.peerProcess;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Set;
 
 import static logging.Logging.logAndPrint;
-import static peer.peerProcess.messageQueue;
+import static peerfunctions.peerProcess.messageQueue;
 
 public class MessageProcessingHandler implements Runnable {
 
@@ -51,7 +51,7 @@ public class MessageProcessingHandler implements Runnable {
         boolean haveFlag=true;
         boolean logFlag=true;
         if(haveFlag==true){
-            logAndPrint(peer.peerProcess.currentPeerID + " is sending HAVE MESSAGE to the Peer ID " + peerID);
+            logAndPrint(peerfunctions.peerProcess.currentPeerID + " is sending HAVE MESSAGE to the Peer ID " + peerID);
             logFlag=true;
         }
         
