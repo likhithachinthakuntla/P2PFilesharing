@@ -257,7 +257,7 @@ public class MessageProcessingHandler implements Runnable {
             messageType = message.getType();
             remotePeerID = messageInfo.getFromPeerID();
             int peerState = peerProcess.remotePeerDetailsMap.get(messageInfo.getFromPeerID()).getPeerState();
-            int a=0;
+            int ab=0;
             if (messageType.equals(Message.MessageConstants.MESSAGE_HAVE) && peerState != 14) {
 
                 if (isPeerInterested(message, remotePeerID)) {
@@ -282,7 +282,7 @@ public class MessageProcessingHandler implements Runnable {
                     }
                 }
             } else {
-                if (peerState == 2 &&a==2)  {
+                if (peerState == 2 &&a.equals("2"))  {
                     String msg=Message.MessageConstants.MESSAGE_BITFIELD;
                     if (messageType.equals(msg)) {
                         boolean field=true;
@@ -291,12 +291,12 @@ public class MessageProcessingHandler implements Runnable {
                         }
                         boolean field1=true;
                         if(field1==true){
-                            sendBitFieldMessage(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
+                            //sendBitFieldMessage(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
                             peerProcess.remotePeerDetailsMap.get(remotePeerID).setPeerState(3);
                         }
 
-                } else if (peerState == 3 && a==2) {
-                    String msg=Message.MessageConstants.MESSAGE_INTERESTED;
+                } else if (peerState == 3 && a.equals("2")) {
+                    String mssg=Message.MessageConstants.MESSAGE_INTERESTED;
                     String msg1=Message.MessageConstants.MESSAGE_NOT_INTERESTED;
                     if (messageType.equals(msg)) {
                         boolean interested=true;
@@ -334,13 +334,13 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     }
                 } 
-                else if (peerState == 4 && a==2) {
+                else if (peerState == 4 && a.equals("2")) {
                     String tem=Message.MessageConstants.MESSAGE_REQUEST;
                     if (messageType.equals(tem)) {
                         sendFilePiece(peerProcess.peerToSocketMap.get(remotePeerID), message, remotePeerID);
                         boolean stateFlag=true;
                         Set<String> remotePeerDetailsKeys = peerProcess.remotePeerDetailsMap.keySet();
-                        if (!peerProcess.isFirstPeer && peerProcess.bitFieldMessage.isFileDownloadComplete() && a==2) {
+                        if (!peerProcess.isFirstPeer && peerProcess.bitFieldMessage.isFileDownloadComplete() && a.equals("2")) {
                             for (String key : remotePeerDetailsKeys) {
                                 if (!key.equals(peerProcess.currentPeerID)) {
                                     Socket socket = peerProcess.peerToSocketMap.get(key);
@@ -351,7 +351,7 @@ public class MessageProcessingHandler implements Runnable {
                                 }
                             }
                         }
-                        if (isNotPreferredAndUnchokedNeighbour(remotePeerID) && a==2) {
+                        if (isNotPreferredAndUnchokedNeighbour(remotePeerID) && a.equals("2")) {
                             //sending choked message if the neighbor is not in unchoked neighbors or optimistically unchoked neighbors list
                             if(stateFlag==true){
                                 sendChokedMessage(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
@@ -361,9 +361,9 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     }
                 } 
-                else if (peerState == 8 && a==2) {
+                else if (peerState == 8 && a.equals("2")) {
                     String bit=Message.MessageConstants.MESSAGE_BITFIELD;
-                    if (messageType.equals(bit) && a==2) {
+                    if (messageType.equals(bit) && a.equals("2")) {
                         //Received bifield message
                         boolean check=true;
                         if(check){
@@ -380,7 +380,7 @@ public class MessageProcessingHandler implements Runnable {
                         
                     }
                 } 
-                else if (peerState == 9 && a==2) {
+                else if (peerState == 9 && a.equals("2")) {
                     String ch=Message.MessageConstants.MESSAGE_CHOKE;
                     String unch=Message.MessageConstants.MESSAGE_UNCHOKE;
                     if (messageType.equals(unch)) {
@@ -398,7 +398,7 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     }
                     }
-                    else if (messageType.equals(ch) && a==2) {
+                    else if (messageType.equals(ch) && a.equals("2")) {
                         boolean check=true;
                         if(check){
                             logAndPrint("CHOKED by Peer " + remotePeerID);
@@ -407,7 +407,7 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     } 
                 } 
-                else if (peerState == 11 && a==2) {
+                else if (peerState == 11 && a.equals("2")) {
                     int flag=2;
                     String m=Message.MessageConstants.MESSAGE_CHOKE;
                     if (messageType.equals(m)) {
@@ -431,7 +431,7 @@ public class MessageProcessingHandler implements Runnable {
 
                         peerProcess.bitFieldMessage.updateBitFieldInformation(remotePeerID, piece);
                         int firstDifferentPieceIndex = getFirstDifferentPieceIndex(remotePeerID);
-                        if (firstDifferentPieceIndex == -1 && a==2) {
+                        if (firstDifferentPieceIndex == -1 && a.equals("2")) {
                             peerProcess.remotePeerDetailsMap.get(remotePeerID).setPeerState(13);
                         } else {
                             if(flag==2){
@@ -444,7 +444,7 @@ public class MessageProcessingHandler implements Runnable {
                         peerProcess.updateOtherPeerDetails();
                         for (String key : peerProcess.remotePeerDetailsMap.keySet()) {
                             RemotePeerInfo peerDetails = peerProcess.remotePeerDetailsMap.get(key);
-                            if (!key.equals(peerProcess.currentPeerID) && hasPeerInterested(peerDetails) && a==2) {
+                            if (!key.equals(peerProcess.currentPeerID) && hasPeerInterested(peerDetails) && a.equals("2")) {
                                 if(flag==2){
                                     sendHaveMessage(peerProcess.peerToSocketMap.get(key), key);
                                     peerProcess.remotePeerDetailsMap.get(key).setPeerState(3);
@@ -452,7 +452,7 @@ public class MessageProcessingHandler implements Runnable {
                             }
                         }
 
-                        if (!peerProcess.isFirstPeer && peerProcess.bitFieldMessage.isFileDownloadComplete() && a==2 ){
+                        if (!peerProcess.isFirstPeer && peerProcess.bitFieldMessage.isFileDownloadComplete() && a.equals("2") ){
                             for (String key : peerProcess.remotePeerDetailsMap.keySet()) {
                                 if (!key.equals(peerProcess.currentPeerID)) {
                                     Socket socket = peerProcess.peerToSocketMap.get(key);
@@ -467,11 +467,11 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     }
                 } 
-                else if (peerState == 14 && a==2) {
+                else if (peerState == 14 && a.equals("2")) {
                     String have=Message.MessageConstants.MESSAGE_HAVE;
                     String unchoke=Message.MessageConstants.MESSAGE_UNCHOKE;
                     boolean chokeFlag=true;
-                    if (messageType.equals(unchoke) && a==2) {
+                    if (messageType.equals(unchoke) && a.equals("2")) {
                         if(chokeFlag){
                             logAndPrint("UNCHOKED by Peer " + remotePeerID);
                             peerProcess.remotePeerDetailsMap.get(remotePeerID).setPeerState(14);
@@ -493,7 +493,7 @@ public class MessageProcessingHandler implements Runnable {
                         }
                     } 
                 } 
-                else if (peerState == 15 && a==2) {
+                else if (peerState == 15 && a.equals("2")) {
                     boolean processFlag=true;
                     if(processFlag==true){
                         try {
@@ -510,5 +510,7 @@ public class MessageProcessingHandler implements Runnable {
                 }
             }
         }
-    }
+   
+         } 
+         }
 }

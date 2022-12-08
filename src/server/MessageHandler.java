@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import message.HandshakeMessage;
+import message.Handshake;
 import message.Message;
 import message.MessageInfo;
 import peerfunctions.peerProcess;
@@ -18,7 +18,7 @@ import static logging.Logging.logAndPrint;
 import static peerfunctions.peerProcess.messageQueue;
 
 public class MessageHandler implements Runnable {
-    private final ThreadLocal<HandshakeMessage> handshakeMessage = new ThreadLocal<>();
+    private final ThreadLocal<Handshake> handshakeMessage = new ThreadLocal<>();
     String ownPeerId;
     String remotePeerId;
     private int connType;
@@ -86,7 +86,7 @@ public class MessageHandler implements Runnable {
 
                 while (true) {
                     socketInputStream.read(handShakeMessageInBytes);
-                    handshakeMessage.set(HandshakeMessage.convertBytesToHandshakeMessage(handShakeMessageInBytes));
+                    handshakeMessage.set(Handshake.convertBytesToHandshake(handShakeMessageInBytes));
                     String checker=Message.MessageConstants.HANDSHAKE_HEADER;
                     if (handshakeMessage.get().getHeader().equals(checker)) {
                         if(hsmMessage==true){
@@ -104,7 +104,7 @@ public class MessageHandler implements Runnable {
             } else {
                 while (true) {
                     socketInputStream.read(handShakeMessageInBytes);
-                    handshakeMessage.set(HandshakeMessage.convertBytesToHandshakeMessage(handShakeMessageInBytes));
+                    handshakeMessage.set(Handshake.convertBytesToHandshake(handShakeMessageInBytes));
                     String checker=Message.MessageConstants.HANDSHAKE_HEADER;
                     boolean a=true;
                     if (handshakeMessage.get().getHeader().equals(checker) && a==true) {
@@ -213,7 +213,7 @@ public class MessageHandler implements Runnable {
         boolean messageSent = false;
         boolean intialFlag=true;
         try {
-            socketOutputStream.write(HandshakeMessage.convertHandshakeMessageToBytes(new HandshakeMessage(Message.MessageConstants.HANDSHAKE_HEADER, this.ownPeerId)));
+            socketOutputStream.write(Handshake.convertHandshakeToBytes(new Handshake(Message.MessageConstants.HANDSHAKE_HEADER, this.ownPeerId)));
             if(intialFlag==true){
                 messageSent = true;
             }
