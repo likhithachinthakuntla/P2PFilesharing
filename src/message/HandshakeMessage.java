@@ -1,6 +1,6 @@
 package message;
 
-import logging.LogHelper;
+import logging.Logging;
 
 import java.io.UnsupportedEncodingException;
 
@@ -127,6 +127,6 @@ public class HandshakeMessage {
     }
 
     private static void logAndShowInConsole(String message) {
-        LogHelper.logAndPrint(message);
+        Logging.logAndPrint(message);
     }
 }

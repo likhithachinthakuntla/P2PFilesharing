@@ -1,14 +1,14 @@
 package message;
 
 import config.CommonConfiguration;
-import peer.peerProcess;
+import peerfunctions.peerProcess;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 
 public class BitFieldMessage {
 

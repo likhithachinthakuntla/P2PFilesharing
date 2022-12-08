@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 import static peer.peerProcess.messageQueue;
 
 public class MessageHandler implements Runnable {

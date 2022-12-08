@@ -8,10 +8,10 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-public class LogHelper {
+public class Logging {
     public FileHandler fileHandler;
     private static String peerID;
-    public static Logger log = Logger.getLogger(LogHelper.class.getName());
+    public static Logger log = Logger.getLogger(Logging.class.getName());
 
     public static void logAndPrint(String message) {
         log.info(peerID + ": " + message);

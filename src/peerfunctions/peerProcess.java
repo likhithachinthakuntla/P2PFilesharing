@@ -1,7 +1,7 @@
-package peer;
+package peerfunctions;
 
 import config.CommonConfiguration;
-import logging.LogHelper;
+import logging.Logging;
 import message.BitFieldMessage;
 import message.MessageInfo;
 import server.MessageHandler;
@@ -24,7 +24,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static logging.LogHelper.logAndPrint;
+import static logging.Logging.logAndPrint;
 
 
 @SuppressWarnings({"deprecation", "unchecked"})
@@ -60,7 +60,7 @@ public class peerProcess {
         currentPeerID = args[0];
 
         try {
-            LogHelper logHelper = new LogHelper();
+            Logging logHelper = new Logging();
             logHelper.initializeLogger(currentPeerID);
             logAndPrint("Started listening...");
 
@@ -206,7 +206,7 @@ public class peerProcess {
 
     public static void determineOptimisticallyUnchockedNeighbours() {
         timerOptimisticUnchokedNeighbors = new Timer();
-        timerOptimisticUnchokedNeighbors.schedule(new OptimisticallyUnchokedNeighbors(),
+        timerOptimisticUnchokedNeighbors.schedule(new OptimisticUnchokedNeighbors(),
                 0,
                 CommonConfiguration.optimisticUnchokingInterval * 1000
         );

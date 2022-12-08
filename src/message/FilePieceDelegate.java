@@ -1,6 +1,6 @@
 package message;
 
-import peer.peerProcess;
+import peerfunctions.peerProcess;
 
 public class FilePieceDelegate {
     int isPresent;
