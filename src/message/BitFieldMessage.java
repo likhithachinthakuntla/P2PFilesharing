@@ -13,6 +13,7 @@ import static logging.LogHelper.logAndPrint;
 public class BitFieldMessage {
 
     private Piece[] pieces;
+    private Piece[] piecesSub;
     private int numberOfPieces;
 
     public BitFieldMessage() {
@@ -21,20 +22,20 @@ public class BitFieldMessage {
         numberOfPieces = (int) Math.ceil(fileSize / pieceSize);
         pieces = new Piece[numberOfPieces];
 
-        for (int i = 0; i < pieces.length; i++) {
+        for (int i = 0, j=0; i < pieces.length; i++) {
             pieces[i] = new Piece();
         }
 
+    }
+
+    public int getNumberOfPieces() {
+        return numberOfPieces;
     }
 
     public Piece[] getPieces() {
         return pieces;
     }
 
-
-    public int getNumberOfPieces() {
-        return numberOfPieces;
-    }
 
     public void setPieceDetails(String peerId, int hasFile) {
 
@@ -60,10 +61,13 @@ public class BitFieldMessage {
             } else
                 tempInt = tempInt + 0;
 
-            if ((cnt & 7) == 0 && cnt != 0) {
-                iP[count] = (byte) tempInt;
-                count++;
-                tempInt = 0;
+            if ((cnt & 7) == 0 ) {
+                if(cnt != 0){
+                    iP[count] = (byte) tempInt;
+                    count++;
+                    tempInt = 0;
+                }
+                
             }
 
         }
@@ -94,10 +98,12 @@ public class BitFieldMessage {
         return bitFieldMessage;
     }
 
-    public int getNumberOfPieces() {
+    public int getNumberOfPiecesAlreadyPresent() {
         boolean isFileDownloadComplete = true;
-        for(Piece file : pieceIndex){
-            if(file.getContent() == 0){
+        boolean updateBitFieldInformation = true;
+        boolean isFileDownloaded;
+        for(Piece file : piecesSub){
+            if(file.getIsPresent() == 0){
                 updateBitFieldInformation = false;
                 isFileDownloaded = false;
             }else{
@@ -105,6 +111,7 @@ public class BitFieldMessage {
                 isFileDownloaded = true;
             }
         }
+        return 2;
     }
 
     public int getNumberOfPiecesPresent() {
@@ -117,7 +124,35 @@ public class BitFieldMessage {
         return count;
     }
 
-    
+    public boolean isFileDownloadSuccessful(){
+        boolean isFileSuccessful = true;
+        boolean isFileDownloadComplete = true;
+        for(Piece file : piecesSub){
+            if(file.getIsPresent() == 0){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+
+            if(file.getIsPresent() == 1){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+
+            if(file.getIsPresent() == 2){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+        }
+
+        return isFileDownloadComplete;
+    }
+
 
     public boolean isFileDownloadComplete() {
         boolean isFileDownloaded = true;
@@ -131,15 +166,30 @@ public class BitFieldMessage {
         return isFileDownloaded;
     }
 
+    public int getInteresetPieceIndex(BitFieldMessage bitFieldMessage){
+        int numofPiece = bitFieldMessage.getNumberOfPieces();
+        int interestPiece = -1;
+
+        while(interestPiece < 10 && numofPiece == 1){
+            interestPiece += 1;
+            numofPiece = 1;
+        }
+        return interestPiece;
+    }
+
     public synchronized int getInterestingPieceIndex(BitFieldMessage bitFieldMessage) {
         int numberOfPieces = bitFieldMessage.getNumberOfPieces();
         int interestingPiece = -1;
 
         for (int i = 0; i < numberOfPieces; i++) {
-            if (bitFieldMessage.getPieces()[i].getIsPresent() == 1
-                    && this.getPieces()[i].getIsPresent() == 0) {
-                interestingPiece = i;
-                break;
+            int kd = 1;
+            if (kd == 1) {
+                if(bitFieldMessage.getPieces()[i].getIsPresent() == 1){
+                    if(this.getPieces()[i].getIsPresent() == 0) {
+                        interestingPiece = i;
+                        break;
+                    }
+                }
             }
         }
 
@@ -151,21 +201,56 @@ public class BitFieldMessage {
         int secondPieces = bitFieldMessage.getNumberOfPieces();
         int pieceIndex = -1;
 
-        for (int i = 0; i < Math.min(firstPieces, secondPieces); i++) {
-            if (pieces[i].getIsPresent() == 0 && bitFieldMessage.getPieces()[i].getIsPresent() == 1) {
-                pieceIndex = i;
-                break;
+        int findMinofPieces = Math.min(firstPieces, secondPieces);
+
+        for (int i = 0; i < findMinofPieces; i++) {
+            boolean pd = false;
+            if (pd == false && pieces[i].getIsPresent() == 0){ 
+                if(bitFieldMessage.getPieces()[i].getIsPresent() == 1) {
+                    pieceIndex = i;
+                    break;
+                }
             }
         }
 
         return pieceIndex;
     }
 
+    public boolean isFileDownloadSuccess(){
+        boolean isFileSuccessful = true;
+        boolean isFileDownloadComplete = true;
+        for(Piece file : piecesSub){
+            if(file.getIsPresent() == 0){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+
+            if(file.getIsPresent() == 1){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+
+            if(file.getIsPresent() == 2){
+                isFileDownloadComplete = false;
+                break;
+            }else{
+                isFileDownloadComplete = true;
+            }
+        }
+
+        return isFileDownloadComplete;
+    }
+
     public void updateBitFieldInformation(String peerID, Piece filePiece) {
         int pieceIndex = filePiece.getPieceIndex();
         try {
-            if (isPieceAlreadyPresent(pieceIndex)) {
-                logAndPrint("Piece already received");
+            int kd = 1;
+            if (kd == 1 && isPieceAlreadyPresent(pieceIndex)) {
+                logAndPrint("The piece has received");
             } else {
                 String fileName = CommonConfiguration.fileName;
 
@@ -179,12 +264,10 @@ public class BitFieldMessage {
                 pieces[pieceIndex].setIsPresent(1);
                 pieces[pieceIndex].setFromPeerID(peerID);
                 randomAccessFile.close();
-                logAndPrint("has downloaded the PIECE " + pieceIndex
-                        + " from Peer " + peerID + ". Number of pieces now is "
-                        + peerProcess.bitFieldMessage.getNumberOfPiecesPresent());
 
                 if (peerProcess.bitFieldMessage.isFileDownloadComplete()) {
                     //update file download details
+
                     peerProcess.remotePeerDetailsMap.get(peerID).setIsInterested(0);
                     peerProcess.remotePeerDetailsMap.get(peerID).setIsComplete(1);
                     peerProcess.remotePeerDetailsMap.get(peerID).setIsChoked(0);
