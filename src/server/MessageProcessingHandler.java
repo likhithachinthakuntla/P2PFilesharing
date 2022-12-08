@@ -363,7 +363,7 @@ public class MessageProcessingHandler implements Runnable {
                                 - peerProcess.remotePeerDetailsMap.get(remotePeerID).getStartTime().getTime();
                         double dataRate = ((double) (payloadInBytes.length + Message.MessageConstants.MESSAGE_LENGTH + Message.MessageConstants.MESSAGE_TYPE) / (double) totalTime) * 100;
                         peerProcess.remotePeerDetailsMap.get(remotePeerID).setDataRate(dataRate);
-                        Piece piece = FilePieceDelegate.convertByteArrayToFilePiece(payloadInBytes);
+                        Piece piece = SendFilePiece.convertByteArrayToFilePiece(payloadInBytes);
 
                         peerProcess.bitFieldMessage.updateBitFieldInformation(remotePeerID, piece);
                         int firstDifferentPieceIndex = getFirstDifferentPieceIndex(remotePeerID);
