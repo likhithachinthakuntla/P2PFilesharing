@@ -5,6 +5,7 @@ import peer.peerProcess;
 public class FilePieceDelegate {
     
     int isPresent;
+    int isAdded;
     String fromPeerID;
     byte[] content;
     int pieceIndex;
@@ -22,12 +23,28 @@ public class FilePieceDelegate {
         return piece;
     }
 
+    public int getIsAdded(){
+        return isAdded;
+    }
+
+    public int setIsAdded(int isAdded){
+        return this.isAdded = isAdded;
+    }
+
     public int getIsPresent() {
         return isPresent;
     }
 
     public void setIsPresent(int isPresent) {
         this.isPresent = isPresent;
+    }
+
+    public int getPieceIndex() {
+        return pieceIndex;
+    }
+
+    public void setPieceIndex(int pieceIndex) {
+        this.pieceIndex = pieceIndex;
     }
 
     public String getFromPeerID() {
@@ -46,11 +63,5 @@ public class FilePieceDelegate {
         this.content = content;
     }
 
-    public int getPieceIndex() {
-        return pieceIndex;
-    }
-
-    public void setPieceIndex(int pieceIndex) {
-        this.pieceIndex = pieceIndex;
-    }
+   
 }

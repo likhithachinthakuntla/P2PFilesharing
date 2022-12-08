@@ -24,9 +24,24 @@ public class Message {
 
     public Message(String messageType) {
         try {
-            if (messageType == MessageConstants.MESSAGE_INTERESTED || messageType == MessageConstants.MESSAGE_NOT_INTERESTED ||
-                    messageType == MessageConstants.MESSAGE_CHOKE || messageType == MessageConstants.MESSAGE_UNCHOKE
-                    || messageType == MessageConstants.MESSAGE_DOWNLOADED) {
+            if (messageType == MessageConstants.MESSAGE_INTERESTED){
+                setMessageLength(1);
+                setMessageType(messageType);
+                this.payload = null;
+            }else if(messageType == MessageConstants.MESSAGE_NOT_INTERESTED){
+                setMessageLength(1);
+                setMessageType(messageType);
+                this.payload = null;
+            } 
+            else if(messageType == MessageConstants.MESSAGE_CHOKE ){
+                setMessageLength(1);
+                setMessageType(messageType);
+                this.payload = null;
+            }else if(messageType == MessageConstants.MESSAGE_UNCHOKE ){
+                setMessageLength(1);
+                setMessageType(messageType);
+                this.payload = null;             
+            }else if(messageType == MessageConstants.MESSAGE_DOWNLOADED ){
                 setMessageLength(1);
                 setMessageType(messageType);
                 this.payload = null;
@@ -134,7 +149,9 @@ public class Message {
             int messageType = Integer.parseInt(message.getType());
             if (message.getLengthInBytes().length > MessageConstants.MESSAGE_LENGTH)
                 throw new Exception("Message Length is Invalid.");
-            else if (messageType < 0 || messageType > 8)
+            else if (messageType < 0)
+                throw new Exception("Message Type is Invalid.");
+            else if (messageType > 8)
                 throw new Exception("Message Type is Invalid.");
             else if (message.getTypeInBytes() == null)
                 throw new Exception("Message Type is Invalid.");
@@ -152,7 +169,8 @@ public class Message {
                 System.arraycopy(message.getLengthInBytes(), 0, messageInByteArray, 0, message.getLengthInBytes().length);
                 System.arraycopy(message.getTypeInBytes(), 0, messageInByteArray, MessageConstants.MESSAGE_LENGTH, MessageConstants.MESSAGE_TYPE);
             }
-        } catch (Exception e) {
+        } catch (Exception err) {
+            LogHelper.logAndPrint(err.toString());
         }
 
         return messageInByteArray;
@@ -237,3 +255,4 @@ public class Message {
 
     }
 }
+
