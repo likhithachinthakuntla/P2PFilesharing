@@ -1,6 +1,6 @@
 package peerfunctions;
 
-import message.BitFieldMessage;
+import message.BitField;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,7 +21,7 @@ public class RemotePeerInfo {
     private int peerState = -1;
     private int previousPeerState = -1;
     private int isPreferredNeighbor = 0;
-    private BitFieldMessage bitFieldMessage;
+    private BitField bitFieldMessage;
     private int isOptimisticallyUnchockedNeighbor;
     private int isInterested;
     private int isHandShaked;
@@ -81,12 +81,12 @@ public class RemotePeerInfo {
     }
 
 
-    public BitFieldMessage getBitFieldMessage() {
+    public BitField getBitField() {
         return bitFieldMessage;
     }
 
 
-    public void setBitFieldMessage(BitFieldMessage bitFieldMessage) {
+    public void setBitField(BitField bitFieldMessage) {
         this.bitFieldMessage = bitFieldMessage;
     }
 

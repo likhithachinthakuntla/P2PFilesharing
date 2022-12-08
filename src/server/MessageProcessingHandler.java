@@ -70,7 +70,7 @@ public class MessageProcessingHandler implements Runnable {
 
     private int getFirstDifferentPieceIndex(String peerID) {
 
-        BitFieldMessage tempp = peerProcess.remotePeerDetailsMap.get(peerID).getBitFieldMessage();
+        BitField tempp = peerProcess.remotePeerDetailsMap.get(peerID).getBitField();
         return peerProcess.bitFieldMessage.getFirstDifferentPieceIndex(tempp);
     }
 
@@ -186,7 +186,7 @@ public class MessageProcessingHandler implements Runnable {
         }
     }
 
-    private void sendBitFieldMessage(Socket socket, String remotePeerID) {
+    private void sendBitField(Socket socket, String remotePeerID) {
         boolean bitFieldFlag=true;
         boolean logFlag=true;
         if(bitFieldFlag==true){
@@ -203,8 +203,8 @@ public class MessageProcessingHandler implements Runnable {
 
     private boolean isPeerInterested(Message message, String remotePeerID) {
         boolean peerInterested = false;
-        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitFieldMessage(BitFieldMessage.decodeMessage(message.getPayload()));
-        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(BitFieldMessage.decodeMessage(message.getPayload()));
+        peerProcess.remotePeerDetailsMap.get(remotePeerID).setBitField(BitField.decodeMessage(message.getPayload()));
+        int pieceIndex = peerProcess.bitFieldMessage.getInterestingPieceIndex(BitField.decodeMessage(message.getPayload()));
         boolean pieceFlag=true;
         int field=1;
         if (pieceIndex != -1 && pieceFlag==true) {
@@ -271,7 +271,7 @@ public class MessageProcessingHandler implements Runnable {
                     if (messageType.equals(Message.MessageConstants.MESSAGE_BITFIELD)) {
 
                         logAndPrint("received a BITFIELD message from Peer " + remotePeerID);
-                        sendBitFieldMessage(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
+                        sendBitField(peerProcess.peerToSocketMap.get(remotePeerID), remotePeerID);
                         peerProcess.remotePeerDetailsMap.get(remotePeerID).setPeerState(3);
                     }
                 } else if (peerState == 3) {

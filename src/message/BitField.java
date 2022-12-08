@@ -10,13 +10,13 @@ import java.util.Arrays;
 
 import static logging.Logging.logAndPrint;
 
-public class BitFieldMessage {
+public class BitField {
 
     private Piece[] pieces;
     private Piece[] piecesSub;
     private int numberOfPieces;
 
-    public BitFieldMessage() {
+    public BitField() {
         Double fileSize = Double.parseDouble(String.valueOf(CommonConfiguration.fileSize));
         Double pieceSize = Double.parseDouble(String.valueOf(CommonConfiguration.pieceSize));
         numberOfPieces = (int) Math.ceil(fileSize / pieceSize);
@@ -79,8 +79,8 @@ public class BitFieldMessage {
         return iP;
     }
 
-    public static BitFieldMessage decodeMessage(byte[] bitField) {
-        BitFieldMessage bitFieldMessage = new BitFieldMessage();
+    public static BitField decodeMessage(byte[] bitField) {
+        BitField bitFieldMessage = new BitField();
         for (int i = 0; i < bitField.length; i++) {
             int count = 7;
             while (count >= 0) {
@@ -166,7 +166,7 @@ public class BitFieldMessage {
         return isFileDownloaded;
     }
 
-    public int getInteresetPieceIndex(BitFieldMessage bitFieldMessage){
+    public int getInteresetPieceIndex(BitField bitFieldMessage){
         int numofPiece = bitFieldMessage.getNumberOfPieces();
         int interestPiece = -1;
 
@@ -177,7 +177,7 @@ public class BitFieldMessage {
         return interestPiece;
     }
 
-    public synchronized int getInterestingPieceIndex(BitFieldMessage bitFieldMessage) {
+    public synchronized int getInterestingPieceIndex(BitField bitFieldMessage) {
         int numberOfPieces = bitFieldMessage.getNumberOfPieces();
         int interestingPiece = -1;
 
@@ -196,7 +196,7 @@ public class BitFieldMessage {
         return interestingPiece;
     }
 
-    public synchronized int getFirstDifferentPieceIndex(BitFieldMessage bitFieldMessage) {
+    public synchronized int getFirstDifferentPieceIndex(BitField bitFieldMessage) {
         int firstPieces = numberOfPieces;
         int secondPieces = bitFieldMessage.getNumberOfPieces();
         int pieceIndex = -1;

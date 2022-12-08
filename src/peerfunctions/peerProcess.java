@@ -2,7 +2,7 @@ package peerfunctions;
 
 import config.CommonConfiguration;
 import logging.Logging;
-import message.BitFieldMessage;
+import message.BitField;
 import message.MessageInfo;
 import server.MessageHandler;
 import server.MessageProcessingHandler;
@@ -33,7 +33,7 @@ public class peerProcess {
     public static boolean isFirstPeer;
     public static String currentPeerID;
     public static int peerIndex;
-    public static BitFieldMessage bitFieldMessage;
+    public static BitField bitFieldMessage;
     public static int currentPeerPort;
     public static int currentPeerHasFile;
     public static boolean isDownloadComplete;
@@ -66,7 +66,7 @@ public class peerProcess {
 
             initializeConfiguration();
             setCurrentPeerDetails();
-            initializeBitFieldMessage();
+            initializeBitField();
 
             startMessageProcessingThread();
             startFileServerReceiverThreads(process);
@@ -132,8 +132,8 @@ public class peerProcess {
         }
     }
 
-    public static void initializeBitFieldMessage() {
-        bitFieldMessage = new BitFieldMessage();
+    public static void initializeBitField() {
+        bitFieldMessage = new BitField();
         bitFieldMessage.setPieceDetails(currentPeerID, currentPeerHasFile);
     }
 
