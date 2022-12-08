@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import message.Handshake;
-import message.Message;
-import message.MessageInfo;
+import msg.Handshake;
+import msg.Message;
+import msg.MessageInfo;
 import peerfunctions.peerProcess;
 
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package peerfunctions;
 
 import config.CommonConfiguration;
-import message.Message;
+import msg.Message;
 
 import java.io.IOException;
 import java.io.OutputStream;

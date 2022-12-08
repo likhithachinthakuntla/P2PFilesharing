@@ -1,6 +1,6 @@
 package peerfunctions;
 
-import message.BitField;
+import msg.BitField;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -2,8 +2,8 @@ package peerfunctions;
 
 import config.CommonConfiguration;
 import logging.Logging;
-import message.BitField;
-import message.MessageInfo;
+import msg.BitField;
+import msg.MessageInfo;
 import server.MessageHandler;
 import server.MessageProcessing;
 import server.ServerHandler;

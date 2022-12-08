@@ -1,4 +1,4 @@
-package message;
+package msg;
 
 import logging.Logging;
 import peerfunctions.peerProcess;

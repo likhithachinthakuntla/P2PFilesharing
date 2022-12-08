@@ -1,7 +1,7 @@
 package server;
 
 import config.CommonConfiguration;
-import message.*;
+import msg.*;
 import peerfunctions.RemotePeerInfo;
 import peerfunctions.peerProcess;
 

@@ -1,4 +1,4 @@
-package message;
+package msg;
 
 import config.CommonConfiguration;
 import peerfunctions.peerProcess;
