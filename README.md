@@ -1,7 +1,7 @@
 Project Members:
 1. Likhitha Chinthakuntla (UFID:1172-3267)
 2. Anil Kumar Kondapalli (UFID:4511-2505)
-3. Tanmayi Kasthuri (UFID:1696-3063)
+
 
 Demo link:
 https://uflorida-my.sharepoint.com/:v:/g/personal/chinthakuntla_l_ufl_edu/ETI9CFJKTfFPgjmd9YAKZD8BvdR4CvA-AWqtvVAOZBlrGw?e=tQWiiQ
